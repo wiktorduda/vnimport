@@ -1,10 +1,10 @@
 class VNImportClient:
-	def __init__(self, search_api, search_api_mapper, download_image_api, playniteapi):
-		self.search_api = search_api
-		self.search_api_mapper = search_api_mapper
-		self.download_image_api = download_image_api
+	def __init__(self, metadata_search_fn, metadata_search_mapper, image_download_fn, playniteapi):
+		self.metadata_search_fn = metadata_search_fn
+		self.metadata_search_mapper = metadata_search_mapper
+		self.image_download_fn = image_download_fn
 		self.playniteapi = playniteapi
-		
+
 	def search_metadata(self, model):
 		keyword = ''.join([c if self._is_cjk(c) or c.isalnum() or c.isspace() else ' ' for c in model.Name])
 		game_objs = self.search_keyword(keyword)
@@ -14,8 +14,8 @@ class VNImportClient:
 		return game_objs
 
 	def search_keyword(self, keyword):
-		response = self.search_api(keyword)
-		game_objs = self.search_api_mapper.map(response)
+		response = self.metadata_search_fn(keyword)
+		game_objs = self.metadata_search_mapper.map(response)
 		return game_objs
 
 	def select_game_obj(self, game_objs, model, dialog_view):
@@ -37,7 +37,7 @@ class VNImportClient:
 	def update_game_image(self, game_obj, model, image_api_args):
 		self.playniteapi.Database.RemoveImage(model.Image, model)
 		file_id = None
-		with self.download_image_api(*image_api_args) as payload:
+		with self.image_download_fn(*image_api_args) as payload:
 			file_id_format = 'images/custom/{}.jpg'
 			file_id = self.playniteapi.Database.AddFile(file_id_format.format(payload[0]), payload[1])
 		game_obj['image_id'] = file_id
