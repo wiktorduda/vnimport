@@ -1,3 +1,5 @@
+import datetime
+
 class ErogetrailersResourceMapper:
 	def __init__(self, playnite):
 		self.playnite = playnite
@@ -10,12 +12,21 @@ class ErogetrailersResourceMapper:
 					'kanji_name': item['title'],
 					'roman_name': item['romanTitle'],
 					'developers': [item['brand']],
-					'release_date': item['releaseDayNumber'],
+					'release_date': self._map_release_date(item),
 					'links': self._map_item_to_links(item),
 					'platform': item['platform'],
 					'getchu_id': item['getchu']
 				})
 		return results
+		
+	def _map_release_date(self, item):
+		release_date = None
+		try:
+			release_date = datetime.datetime.strptime(str(item['releaseDayNumber']), '%Y%m%d')
+		except ValueError:
+			pass
+		return release_date
+			
 
 	def _map_item_to_links(self, item):
 		getchu_url = 'http://www.getchu.com/soft.phtml?id={}'

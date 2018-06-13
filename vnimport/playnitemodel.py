@@ -1,4 +1,5 @@
 import System
+import clr
 
 class UpdateGameModel:
 	def __init__(self, playnite, is_roman=False):
@@ -32,7 +33,8 @@ class UpdateGameModel:
 		
 	def update_release_date(self, game_obj, model):
 		release_date = game_obj['release_date']
-		model.ReleaseDate = System.DateTime.ParseExact(str(release_date), 'yyyyMMdd', None)
+		if release_date:
+			model.ReleaseDate = clr.Convert(release_date, System.DateTime)
 
 	def update_links(self, game_obj, model):
 		links = game_obj['links']
