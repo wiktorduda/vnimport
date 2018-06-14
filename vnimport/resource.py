@@ -5,27 +5,37 @@ import json
 import tempfile
 import uuid
 import time
+import threading
 
-rate = 2.0
+rate = 1.0
 per_second = 5.0
 
-def rate_limit(rate, per_second):
+def rate_limit(rate, per_second, **kwargs):
+    now_func = kwargs.get('now_func', time.time)
+    sleep_func = kwargs.get('sleep_func', time.sleep)
+    lock = threading.Lock()
+    rate = float(rate)
+    per_second = float(per_second)
     if rate < 1.0:
         rate = 1.0 / rate
         per_second = per_second * (rate * rate)
     def decorate(func):
-        last_check = time.time()
-        def rate_limit_func(*args,**kargs):
-            allowance = rate
-            elapsed = time.time() - last_check
-            allowance += elapsed * (rate / per_second)
-            if allowance > rate:
-                allowance = rate
-            if allowance < 1.0:
-                sleep_time = (1.0 - allowance) * (per_second / rate)
-                time.sleep(sleep_time)
-            allowance -= 1.0
-            return func(*args,**kargs)
+        last_check = [now_func()]
+        allowance = [rate]
+        def rate_limit_func(*args,**kwargs):
+            lock.acquire()
+            now_epoch = now_func()
+            elapsed = now_epoch - last_check[0]
+            last_check[0] = now_epoch
+            allowance[0] += elapsed * (rate / per_second)
+            if allowance[0] > rate:
+                allowance[0] = rate
+            if allowance[0] < 1.0:
+                sleep_time = (1.0 - allowance[0]) * (per_second / rate)
+                sleep_func(sleep_time)
+            allowance[0] -= 1.0
+            lock.release()
+            return func(*args,**kwargs)
         return rate_limit_func
     return decorate
 

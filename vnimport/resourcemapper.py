@@ -1,15 +1,12 @@
 import datetime
 
 class ErogetrailersResourceMapper:
-    def __init__(self, playnite):
-        self.playnite = playnite
-
     def map(self, response):
         results = []
         if response['items']:
             for item in response['items']:
                 results.append({
-                    'kanji_name': item['title'],
+                    'original_name': item['title'],
                     'roman_name': item['romanTitle'],
                     'developers': [item['brand']],
                     'release_date': self._map_release_date(item),
@@ -34,7 +31,13 @@ class ErogetrailersResourceMapper:
         erogamescape_id = item['erogamescape']
         links = []
         if item['getchu']:
-            links.append(self.playnite.SDK.Models.Link('Getchu', getchu_url.format(getchu_id)))
+            links.append({
+                    'name': 'Getchu', 
+                    'url': getchu_url.format(getchu_id)
+            })
         if item['erogamescape']:
-            links.append(self.playnite.SDK.Models.Link('ErogameScape', erogamescape_url.format(erogamescape_id)))
+            links.append({
+                    'name': 'ErogameScape', 
+                    'url': erogamescape_url.format(erogamescape_id)
+            })
         return links

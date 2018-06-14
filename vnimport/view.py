@@ -24,16 +24,21 @@ class SingleOptionView(object):
                     return (input_result.Result, -1)
                     break
                 return (input_result.Result, option)
-            except ValueError:
-                self.playniteapi.Dialogs.ShowErrorMessage('Please enter a valid option', 'Input Error')
+            except ValueError as e:
+                self.playniteapi.Dialogs.ShowErrorMessage(str(e), 'Input Error')
     
     def _get_single_option(self, input_result, expected_range):
         if not input_result.SelectedString:
             option = -1
             return option
-        option = int(input_result.SelectedString)-1
+        try:
+            option = int(input_result.SelectedString)-1
+        except ValueError:
+            message = '"{}" is not a option number.'
+            raise ValueError(message.format(input_result.SelectedString))
         if option < 0 or option > expected_range-1:
-            raise ValueError('Not within possible options range')
+            message = '"{}" is not within possible options range.'
+            raise ValueError(message.format(input_result.SelectedString))
         return option
 
 class MultiOptionView(object):
@@ -44,11 +49,14 @@ class MultiOptionView(object):
         intro = kwargs.get('intro', '')
         intro += '\n____________________________'
         intro += '\nEntering option numbers in comma seperated form:'
-        example = '\ne.g. {},{} for selecting "{}" and "{}"'
+        example1 = '\ne.g. {} for selecting "{}"'
+        example2 = '\ne.g. {},{} for selecting "{}" and "{}"'
         if len(options) > 2:
-            intro += example.format(2,3, options[1], options[2])
+            intro += example1.format(1, options[0])
+            intro += example2.format(2,3, options[1], options[2])
         if len(options) == 2:
-            intro += example.format(1,2, options[0], options[1])
+            intro += example1.format(1, options[0])
+            intro += example2.format(1,2, options[0], options[1])
         intro += '\n____________________________'
         kwargs['intro'] = intro
         message = _create_option_menus(options, **kwargs)
@@ -62,17 +70,25 @@ class MultiOptionView(object):
                     return (input_result.Result, [])
                     break
                 return (input_result.Result, options)
-            except ValueError:
-                self.playniteapi.Dialogs.ShowErrorMessage('Please enter a valid option', 'Input Error')
+            except ValueError as e:
+                self.playniteapi.Dialogs.ShowErrorMessage(str(e), 'Input Error')
 
     def _get_multi_options(self, input_result, expected_range):
         options = []
         if not input_result.SelectedString:
             return options
-        options = [int(option)-1 for option in input_result.SelectedString.split(',')]
+        try:
+            options = [int(option)-1 for option in input_result.SelectedString.split(',')]
+        except ValueError:
+            message = '"{}" is not a option numbers in comma seperated form.'
+            raise ValueError(message.format(input_result.SelectedString))
         for option in options:
             if option < 0 or option > expected_range-1:
-                raise ValueError('Within possible options range'.format(option))
+                if len(options) == 1:
+                    message = '"{}" is not within possible options range.'
+                else:
+                    message = 'In "{}", at least one of the option is not within possible options range.'
+                raise ValueError(message.format(input_result.SelectedString))
         return options
 
 class MatchedGameSelectionDialog(SingleOptionView):
@@ -114,7 +130,7 @@ class ErogetrailersImportOptionsDialog(MultiOptionView):
 class ConfirmRomanDialog(SingleOptionView):
     def view(self, caption='Download Metadata'):
         intro = 'Which charachers should the name of visual novel display?'
-        options = ['Kanji', 'Roman']
+        options = ['Original Name(With Japanese Kanji)', 'Roman']
         input_result = self.render(options, intro=intro, caption=caption)
         is_roman = True if input_result[1] == 1 else False
         return (input_result[0], is_roman)

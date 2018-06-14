@@ -52,7 +52,7 @@ def erogetrailers_main():
         ignore_image = False
         game_objs = client.search_metadata(model)
         game_selection_dialog = view.MatchedGameSelectionDialog(PlayniteApi, model.Name, game_objs, is_roman)
-        select_result = client.select_game_obj(game_objs, model, game_selection_dialog)
+        select_result = client.select_game(game_objs, model, game_selection_dialog)
         game_obj = select_result[1]
         if not select_result[0]:
             continue
@@ -73,5 +73,5 @@ def erogetrailers_main():
         ignore_image = True
         PlayniteApi.Dialogs.ShowMessage(message, 'Download Metadata From Erogetrailers')
         pass
-    client.update_metadata(import_answers, import_actions, game_obj, model)
+    client.apply_actions(import_answers, import_actions, game_obj, model)
     PlayniteApi.Database.UpdateGame(model)

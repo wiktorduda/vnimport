@@ -18,7 +18,7 @@ class VNImportClient:
         game_objs = self.metadata_search_mapper.map(response)
         return game_objs
 
-    def select_game_obj(self, game_objs, model, dialog_view):
+    def select_game(self, game_objs, model, dialog_view):
         game_obj = None
         is_selected = True
         if len(game_objs) == 1:
@@ -30,7 +30,7 @@ class VNImportClient:
             game_obj = game_objs[select_result[1]]
         return (is_selected, game_obj)
 
-    def update_metadata(self, answers, actions, game_obj, model):
+    def apply_actions(self, answers, actions, game_obj, model):
         for answer in answers:
             actions[answer](game_obj, model)
 
