@@ -24,11 +24,11 @@ Prerequisites
 
 Installation
 ============
-1. Download this repository_
+1. Download this repository_.
 2. Inside the zip file, move :code:`vnimport` folder to:
 
-    1. If you are using installed version of Playnite: move :code:`vnimport` folder to :code:`C:\Users\%USERNAME%\AppData\Roaming\Playnite\IronPython`
-    2. If you are using portable version of Playnite: move `vnimport` folder to :code:`<basedir>\Scripts\IronPython`. :code:`<basedir>` is where your Playnite folder located.
+   1. If you are using installed version of Playnite: move :code:`vnimport` folder to :code:`C:\Users\%USERNAME%\AppData\Roaming\Playnite\IronPython`
+   2. If you are using portable version of Playnite: move `vnimport` folder to :code:`<basedir>\Scripts\IronPython`. :code:`<basedir>` is where your Playnite folder located.
         
 .. _repository: https://github.com/wiktorduda/vnimport/archive/master.zip
 
