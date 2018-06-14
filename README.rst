@@ -58,5 +58,5 @@ License
 =======
 BSD 3-Clause License
 
-Copyright (c) 2018, Wiktor Duda
+Copyright © 2018, Wiktor Duda
 All rights reserved.
