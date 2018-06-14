@@ -49,7 +49,7 @@ Why the plugin interface looks so bad?
 Where do I get those metadata?
 -----
 
-* Those data are from API of erogetrailers_(http://ketsuage.seesaa.net/article/263754550.html). The API provide product ID of Getchu.com_. Therefore, I can use the product ID to download cover image from Getchu.com_
+* Those data are from API of erogetrailers_. The API provide product ID of Getchu.com_. Therefore, I can use the product ID to download cover image from Getchu.com_
 
 .. _erogetrailers: http://ketsuage.seesaa.net/article/263754550.html
 .. _Getchu.com: http://www.getchu.com
