@@ -25,7 +25,7 @@ __exports = [
 
 def erogetrailers_main():
     client = api.VNImportClient(resource.search_erogetrailers, 
-                                resourcemapper.ErogetrailersResourceMapper(Playnite), 
+                                resourcemapper.ErogetrailersResourceMapper(), 
                                 resource.dowload_getchu_cover_image, 
                                 PlayniteApi)
     scope_dialog = view.ImportScopeOptionsDialog(PlayniteApi)

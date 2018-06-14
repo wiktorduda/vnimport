@@ -107,7 +107,7 @@ class MatchedGameSelectionDialog(SingleOptionView):
         if self.is_roman:
             options = [option_format.format(game_obj['roman_name'], game_obj['platform']) for game_obj in self.game_objs]
         else:
-            options = [option_format.format(game_obj['kanji_name'], game_obj['platform']) for game_obj in self.game_objs]
+            options = [option_format.format(game_obj['original_name'], game_obj['platform']) for game_obj in self.game_objs]
         input_result = self.render(options, intro=intro, caption=caption)
         return input_result
 
